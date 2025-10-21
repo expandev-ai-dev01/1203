@@ -5,8 +5,8 @@ import { LoadingSpinner } from '@/core/components/LoadingSpinner';
 import { ErrorBoundary } from '@/core/components/ErrorBoundary';
 
 // Lazy loading of pages
-const HomePage = lazy(() => import('@/pages/Home'));
-const NotFoundPage = lazy(() => import('@/pages/NotFound'));
+const HomePage = lazy(() => import('@/pages/Home/main'));
+const NotFoundPage = lazy(() => import('@/pages/NotFound/main'));
 
 /**
  * @router AppRouter
@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
-    errorElement: <ErrorBoundary />,
+    errorElement: <ErrorBoundary children={null} />,
     children: [
       {
         index: true,

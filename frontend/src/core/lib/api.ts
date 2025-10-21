@@ -7,9 +7,9 @@ import axios, { AxiosInstance } from 'axios';
  * @category core-library
  */
 export const apiConfig = {
-  baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000',
-  version: import.meta.env.VITE_API_VERSION || 'v1',
-  timeout: parseInt(import.meta.env.VITE_API_TIMEOUT || '30000'),
+  baseUrl: (import.meta as any).env?.VITE_API_URL || 'http://localhost:3000',
+  version: (import.meta as any).env?.VITE_API_VERSION || 'v1',
+  timeout: parseInt((import.meta as any).env?.VITE_API_TIMEOUT || '30000'),
 
   get internalUrl(): string {
     return `${this.baseUrl}/api/${this.version}/internal`;

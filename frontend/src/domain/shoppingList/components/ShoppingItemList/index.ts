@@ -1,0 +1,1 @@
+export { ShoppingItemList } from './main';

@@ -1,10 +1,9 @@
 import { Router } from 'express';
+import shoppingItemRoutes from './shoppingItemRoutes';
 
 const router = Router();
 
-// Feature routes will be added here
-// Example:
-// import shoppingItemRoutes from './shoppingItemRoutes';
-// router.use('/shopping-item', shoppingItemRoutes);
+// Shopping item routes
+router.use('/shopping-item', shoppingItemRoutes);
 
 export default router;
