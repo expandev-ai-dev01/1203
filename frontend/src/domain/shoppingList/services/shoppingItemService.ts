@@ -56,4 +56,16 @@ export const shoppingItemService = {
   async delete(id: string): Promise<void> {
     await authenticatedClient.delete(`/shopping-item/${id}`);
   },
+
+  /**
+   * @endpoint PATCH /api/v1/internal/shopping-item/mark-purchased
+   * @summary Marks one or multiple items as purchased or unpurchased
+   */
+  async markPurchased(itemIds: string[], purchased: boolean): Promise<ShoppingItem[]> {
+    const response = await authenticatedClient.patch('/shopping-item/mark-purchased', {
+      itemIds,
+      purchased,
+    });
+    return response.data.data;
+  },
 };

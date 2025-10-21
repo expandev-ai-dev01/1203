@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as shoppingItemController from '@/api/v1/internal/shopping-item/controller';
 import * as shoppingItemDetailController from '@/api/v1/internal/shopping-item/detail/controller';
+import * as markPurchasedController from '@/api/v1/internal/shopping-item/mark-purchased/controller';
 
 const router = Router();
 
@@ -13,6 +14,9 @@ const router = Router();
 // Collection routes
 router.get('/', shoppingItemController.getHandler);
 router.post('/', shoppingItemController.postHandler);
+
+// Mark purchased route (bulk action)
+router.patch('/mark-purchased', markPurchasedController.patchHandler);
 
 // Detail routes
 router.get('/:id', shoppingItemDetailController.getHandler);

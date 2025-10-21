@@ -15,6 +15,7 @@ export * from './components/ShoppingItemList';
 // Domain public exports - Hooks
 export * from './hooks/useShoppingItems';
 export * from './hooks/useCreateShoppingItem';
+export * from './hooks/useMarkPurchased';
 
 // Domain public exports - Services
 export * from './services/shoppingItemService';
@@ -28,7 +29,7 @@ export const moduleMetadata = {
   domain: 'functional',
   version: '1.0.0',
   publicComponents: ['ShoppingItemForm', 'ShoppingItemList'],
-  publicHooks: ['useShoppingItems', 'useCreateShoppingItem'],
+  publicHooks: ['useShoppingItems', 'useCreateShoppingItem', 'useMarkPurchased'],
   publicServices: ['shoppingItemService'],
   dependencies: {
     internal: ['@/core/components', '@/core/lib', '@/core/utils'],
@@ -37,8 +38,8 @@ export const moduleMetadata = {
   },
   exports: {
     components: ['ShoppingItemForm', 'ShoppingItemList'],
-    hooks: ['useShoppingItems', 'useCreateShoppingItem'],
+    hooks: ['useShoppingItems', 'useCreateShoppingItem', 'useMarkPurchased'],
     services: ['shoppingItemService'],
-    types: ['ShoppingItem', 'CreateShoppingItemDto', 'ShoppingItemFormData'],
+    types: ['ShoppingItem', 'CreateShoppingItemDto', 'ShoppingItemFormData', 'MarkPurchasedDto'],
   },
 } as const;

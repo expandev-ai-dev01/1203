@@ -11,6 +11,7 @@ export type ShoppingItem = {
   purchased: boolean;
   position: number;
   createdAt: string;
+  purchasedAt?: string | null;
 };
 
 export type CreateShoppingItemDto = {
@@ -28,4 +29,9 @@ export type ShoppingItemFormData = {
 
 export type ShoppingItemListParams = {
   purchased?: boolean;
+};
+
+export type MarkPurchasedDto = {
+  itemIds: string[];
+  purchased: boolean;
 };

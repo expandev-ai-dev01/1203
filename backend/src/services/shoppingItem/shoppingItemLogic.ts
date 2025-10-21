@@ -3,6 +3,7 @@ import {
   CreateShoppingItemParams,
   CreateShoppingItemResult,
   ShoppingItem,
+  MarkPurchasedParams,
 } from './shoppingItemTypes';
 import { AppError } from '@/utils/errors';
 
@@ -74,6 +75,7 @@ export async function shoppingItemCreate(
     purchased: false,
     position,
     createdAt: new Date(),
+    purchasedAt: null,
   };
 
   // Add to in-memory storage
@@ -175,11 +177,23 @@ export async function shoppingItemUpdate(
     }
   }
 
+  /**
+   * @rule {BR-002} Register date and time when marking item as purchased
+   * @rule {BR-003} Clear date and time when unmarking item
+   */
+  const purchasedAt =
+    updates.purchased !== undefined
+      ? updates.purchased
+        ? new Date()
+        : null
+      : shoppingItems[itemIndex].purchasedAt;
+
   // Update item
   shoppingItems[itemIndex] = {
     ...shoppingItems[itemIndex],
     ...updates,
     name: updates.name ? updates.name.trim() : shoppingItems[itemIndex].name,
+    purchasedAt,
   };
 
   return shoppingItems[itemIndex];
@@ -209,4 +223,80 @@ export async function shoppingItemDelete(id: string): Promise<void> {
   }
 
   shoppingItems.splice(itemIndex, 1);
+}
+
+/**
+ * @summary
+ * Marks one or multiple shopping items as purchased or unpurchased
+ *
+ * @function shoppingItemMarkPurchased
+ * @module shoppingItem
+ *
+ * @param {MarkPurchasedParams} params - Mark purchased parameters
+ * @param {string[]} params.itemIds - Array of item IDs to update
+ * @param {boolean} params.purchased - Purchase status to set
+ *
+ * @returns {Promise<ShoppingItem[]>} Updated shopping items
+ *
+ * @throws {AppError} When one or more items not found
+ *
+ * @rule {BR-001} Item can only have two states: purchased or pending
+ * @rule {BR-002} Register date and time when marking item as purchased
+ * @rule {BR-003} Clear date and time when unmarking item
+ * @rule {BR-008} Apply same status to all selected items in bulk action
+ * @rule {BR-009} Use same date and time for all items marked in bulk action
+ *
+ * @example
+ * const items = await shoppingItemMarkPurchased({
+ *   itemIds: ['123', '456'],
+ *   purchased: true
+ * });
+ */
+export async function shoppingItemMarkPurchased(
+  params: MarkPurchasedParams
+): Promise<ShoppingItem[]> {
+  /**
+   * @validation Verify all items exist before updating
+   */
+  const notFoundIds: string[] = [];
+  const itemsToUpdate: ShoppingItem[] = [];
+
+  for (const itemId of params.itemIds) {
+    const item = shoppingItems.find((item) => item.id === itemId);
+    if (!item) {
+      notFoundIds.push(itemId);
+    } else {
+      itemsToUpdate.push(item);
+    }
+  }
+
+  if (notFoundIds.length > 0) {
+    throw new AppError('NOT_FOUND', `Itens não encontrados: ${notFoundIds.join(', ')}`, 404, {
+      notFoundIds,
+    });
+  }
+
+  /**
+   * @rule {BR-009} Use same date and time for all items in bulk action
+   */
+  const purchasedAt = params.purchased ? new Date() : null;
+
+  /**
+   * @rule {BR-008} Apply same status to all selected items
+   */
+  const updatedItems: ShoppingItem[] = [];
+
+  for (const item of itemsToUpdate) {
+    const itemIndex = shoppingItems.findIndex((i) => i.id === item.id);
+    if (itemIndex !== -1) {
+      shoppingItems[itemIndex] = {
+        ...shoppingItems[itemIndex],
+        purchased: params.purchased,
+        purchasedAt,
+      };
+      updatedItems.push(shoppingItems[itemIndex]);
+    }
+  }
+
+  return updatedItems;
 }

@@ -11,6 +11,7 @@ export interface ShoppingItem {
   purchased: boolean;
   position: number;
   createdAt: Date;
+  purchasedAt: Date | null;
 }
 
 export interface CreateShoppingItemParams {
@@ -23,6 +24,7 @@ export interface CreateShoppingItemResult {
   purchased: boolean;
   position: number;
   createdAt: Date;
+  purchasedAt: Date | null;
 }
 
 export interface ShoppingItemListItem {
@@ -31,4 +33,10 @@ export interface ShoppingItemListItem {
   purchased: boolean;
   position: number;
   createdAt: Date;
+  purchasedAt: Date | null;
+}
+
+export interface MarkPurchasedParams {
+  itemIds: string[];
+  purchased: boolean;
 }
